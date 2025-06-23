@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deploying {{ service.name }} - Azure Service Catalog</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>Deploying {{ service.name }}</h1>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
+            <h2>Deployment Progress</h2>
+            
+            <div class="progress-container" style="margin: 20px 0;">
+                <div class="progress-bar" style="background: #f3f2f1; height: 8px; border-radius: 4px; overflow: hidden;">
+                    <div id="progress" style="background: #107c10; height: 100%; width: 0%; transition: width 0.5s ease;"></div>
+                </div>
+                <div id="progressText" style="margin-top: 10px; color: #605e5c;">Initializing deployment...</div>
+            </div>
+
+            <div class="deployment-steps" style="margin: 30px 0;">
+                <div id="step1" class="step">✓ Validating configuration</div>
+                <div id="step2" class="step">⏳ Creating resources</div>
+                <div id="step3" class="step">⏳ Configuring networking</div>
+                <div id="step4" class="step">⏳ Installing dependencies</div>
+                <div id="step5" class="step">⏳ Finalizing deployment</div>
+            </div>
+
+            <div style="background: #f8f8f8; padding: 15px; border-radius: 4px; margin: 20px 0;">
+                <h3 style="margin-bottom: 10px;">Configuration:</h3>
+                <pre style="white-space: pre-wrap; font-family: monospace; font-size: 12px;">{{ config }}</pre>
+            </div>
+
+            <button onclick="window.location.href='/catalog'" class="btn-primary" style="margin-top: 20px;">
+                Back to Catalog
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let progress = 0;
+        let currentStep = 1;
+        
+        const steps = [
+            "Validating configuration",
+            "Creating resources", 
+            "Configuring networking",
+            "Installing dependencies",
+            "Finalizing deployment"
+        ];
+
+        function updateProgress() {
+            progress += Math.random() * 20;
+            if (progress > 100) progress = 100;
+            
+            document.getElementById('progress').style.width = progress + '%';
+            
+            if (progress < 100) {
+                const stepIndex = Math.floor(progress / 20);
+                if (stepIndex < steps.length) {
+                    document.getElementById('progressText').textContent = steps[stepIndex] + '...';
+                    
+                    for (let i = 1; i <= 5; i++) {
+                        const stepEl = document.getElementById('step' + i);
+                        if (i <= stepIndex + 1) {
+                            stepEl.innerHTML = '✓ ' + stepEl.textContent.substring(2);
+                            stepEl.style.color = '#107c10';
+                        }
+                    }
+                }
+                setTimeout(updateProgress, 1000 + Math.random() * 2000);
+            } else {
+                document.getElementById('progressText').textContent = 'Deployment completed successfully!';
+                document.getElementById('progressText').style.color = '#107c10';
+                
+                for (let i = 1; i <= 5; i++) {
+                    const stepEl = document.getElementById('step' + i);
+                    stepEl.innerHTML = '✓ ' + stepEl.textContent.substring(2);
+                    stepEl.style.color = '#107c10';
+                }
+            }
+        }
+        
+        setTimeout(updateProgress, 1000);
+    </script>
+</body>
+</html>

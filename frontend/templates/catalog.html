@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Service Catalog</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>Azure Service Catalog</h1>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="services-grid">
+            {% for service in services %}
+            <div class="service-card" onclick="showDeployModal('{{ service.id }}', '{{ service.name }}')">
+                <div class="service-icon">
+                    <img src="{{ service.icon }}" alt="{{ service.name }}" width="48" height="48" onerror="this.style.display='none'">
+                </div>
+                <div class="service-name">{{ service.name }}</div>
+                <div class="service-description">{{ service.description }}</div>
+                <button class="btn-deploy" onclick="event.stopPropagation(); showDeployModal('{{ service.id }}', '{{ service.name }}')">
+                    Deploy
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div id="deployModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 8px; width: 400px;">
+            <h2 id="modalTitle">Deploy Service</h2>
+            <form id="deployForm" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="config_file">Upload YAML Configuration:</label>
+                    <input type="file" id="config_file" name="config_file" accept=".yaml,.yml" required>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="submit" class="btn-primary">Deploy</button>
+                    <button type="button" onclick="hideDeployModal()" style="background: #ccc; color: #333;">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function showDeployModal(serviceId, serviceName) {
+            document.getElementById('modalTitle').textContent = 'Deploy ' + serviceName;
+            document.getElementById('deployForm').action = '/deploy/' + serviceId;
+            document.getElementById('deployModal').style.display = 'block';
+        }
+        
+        function hideDeployModal() {
+            document.getElementById('deployModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

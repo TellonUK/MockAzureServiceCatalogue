@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Service Catalog - Login</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <svg width="120" height="60" viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="azure-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#0078d4;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#106ebe;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <rect width="120" height="60" rx="8" fill="url(#azure-gradient)"/>
+                    <text x="60" y="20" text-anchor="middle" fill="white" font-family="Segoe UI" font-size="12" font-weight="600">Microsoft</text>
+                    <text x="60" y="40" text-anchor="middle" fill="white" font-family="Segoe UI" font-size="16" font-weight="700">Azure</text>
+                </svg>
+            </div>
+            <h1>Azure Service Catalog</h1>
+            <form method="post" action="/login">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn-primary">Sign In</button>
+                {% if error %}
+                <div class="error">{{ error }}</div>
+                {% endif %}
+            </form>
+            <div style="margin-top: 20px; text-align: center; color: #666; font-size: 12px;">
+                Use username: guest, password: guest
+            </div>
+        </div>
+    </div>
+</body>
+</html>
